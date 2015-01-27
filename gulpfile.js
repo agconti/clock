@@ -15,12 +15,12 @@ gulp.task('browser-sync', function () {
   })
 })
 
+gulp.task('bs-reload', function () {
+    browserSync.reload();
+})
 
 gulp.task('sass', function () {
-  return gulp.src(
-    [ 'scss/**/*.scss'
-    , '**/*.css'
-    ])
+  return gulp.src('scss/**/*.scss')
     .pipe(changed('css'))
     .pipe(sass().on('error', console.error.bind(console)))
     .pipe(autoprefixer('last 2 versions'))
@@ -30,6 +30,6 @@ gulp.task('sass', function () {
 
 
 gulp.task('default', ['sass', 'browser-sync'], function(){
-  gulp.watch(['./**/*.html'], [reload])
   gulp.watch(['scss/*.scss'], ['sass'])
+  gulp.watch('*.html', ['bs-reload'])
 })
