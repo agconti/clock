@@ -1,22 +1,27 @@
 var time = getTime()
   
   // svg config 
-  , svgWidth = 700
-  , svgHeight = 600
-  margin = {
-    top: 20
-  , right: 30
-  , bottom: 30
-  , left: 40
-  }
+  , svgWidth = 250
+  , svgHeight = 200
+  , margin = {
+      top: 20
+    , right: 30
+    , bottom: 30
+    , left: 40
+    }
 
   // clock config
   , clock = '.clock'
   , blue = 'hsl(221, 85%, 22%)'
-  , barPadding = 1
+  , barPadding = 10
+  , width = (svgWidth / time.length)
+  , maximumTime = [0, 60]
   , yScale = d3.scale.linear()
-      .domain(d3.extent(time))
-      .range([0, d3.max(time)])
+      .domain(maximumTime)
+      .range([0, svgHeight])
+  , xScale = d3.scale.ordinal()
+    .domain(time.map(function(d, i){return i}))
+    .rangeBands([0, svgWidth])
 
 
 
@@ -31,25 +36,24 @@ function getTime () {
 
 var svg = d3.select(clock)
   .append('svg')
+  .attr('height', svgHeight + margin.top + margin.bottom + 'px')
+  .attr('width', svgWidth + margin.left + margin.right + 'px')
+  .style('margin-left', -margin.left+'px')
   .append('g')
+  .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
 
 var rects = svg.selectAll('rect')
   .data(time).enter()
   .append('rect')
-  .attr('x', function(data, i){ return i * 101 })
-  .attr('y', 0)
-  .attr('width', 100)
-  .attr('height', function(data){ return yScale(data) })
-  .attr('fill', blue)
-
+ 
 function tick (time){
 
   var rects = svg.selectAll('rect')
-    .attr('x', function(data, i){ return i * 101 })
+    .attr('x', function(d, i){ return xScale(i) })
     .attr('y', 0)
-    .attr('width', 100)
-    .attr('height', function(data){ return yScale(data) })
+    .attr('width',  width)
+    .attr('height', function(d){ return yScale(d) })
     .attr('fill', blue)
 }
 
@@ -59,7 +63,6 @@ tick(time)
 // update the clock 
 setInterval(function() {
   var time = getTime()
-  yScale.domain(d3.extent(time))
   tick(time)
   console.log(time)
 }, 1000)
