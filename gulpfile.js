@@ -21,15 +21,23 @@ gulp.task('bs-reload', function () {
 
 gulp.task('sass', function () {
   return gulp.src('scss/**/*.scss')
-    .pipe(changed('css'))
+    .pipe(changed('dest'))
     .pipe(sass().on('error', console.error.bind(console)))
     .pipe(autoprefixer('last 2 versions'))
-    .pipe(gulp.dest('css'))
+    .pipe(gulp.dest('dest'))
+    .pipe(reload({stream:true}))
+})
+
+gulp.task('js', function () {
+  return gulp.src('js/**/*.js')
+    .pipe(changed('dest'))
+    .pipe(gulp.dest('dest'))
     .pipe(reload({stream:true}))
 })
 
 
 gulp.task('default', ['sass', 'browser-sync'], function(){
   gulp.watch(['scss/*.scss'], ['sass'])
+  gulp.watch(['js/**/*.js'], ['js'])
   gulp.watch('*.html', ['bs-reload'])
 })
