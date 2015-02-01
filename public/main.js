@@ -51,11 +51,12 @@ function tick (time){
 
   rects = svg.selectAll('rect')
     .data(time)
+    .transition()
     .attr('x', function(d, i){ return xScale(i) })
     .attr('y', function(d){ return yScale(d) })
     .attr('width',  xScale.rangeBand())
     .attr('height', function(d){ return svgHeight - yScale(d) })
-    .attr('fill', blue)
+    .style('fill', blue)
 }
 
 // The initial display.
