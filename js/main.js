@@ -49,7 +49,8 @@ var rects = svg.selectAll('rect')
  
 function tick (time){
 
-  var rects = svg.selectAll('rect')
+  rects = svg.selectAll('rect')
+    .data(time)
     .attr('x', function(d, i){ return xScale(i) })
     .attr('y', 0)
     .attr('width',  width)
