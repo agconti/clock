@@ -13,7 +13,7 @@ var time = getTime()
   // clock config
   , clock = '.clock'
   , blue = 'hsl(221, 85%, 22%)'
-  , barPadding = 0.5
+  , barPadding = 0.2
   , width = (svgWidth / time.length)
   , maximumTime = [0, 60]
   , yScale = d3.scale.linear()
@@ -53,7 +53,7 @@ function tick (time){
     .data(time)
     .attr('x', function(d, i){ return xScale(i) })
     .attr('y', function(d){ return yScale(d) })
-    .attr('width',  width)
+    .attr('width',  xScale.rangeBand())
     .attr('height', function(d){ return svgHeight - yScale(d) })
     .attr('fill', blue)
 }
