@@ -13,15 +13,15 @@ var time = getTime()
   // clock config
   , clock = '.clock'
   , blue = 'hsl(221, 85%, 22%)'
-  , barPadding = 10
+  , barPadding = 0.5
   , width = (svgWidth / time.length)
   , maximumTime = [0, 60]
   , yScale = d3.scale.linear()
       .domain(maximumTime)
-      .range([0, svgHeight])
+      .range([svgHeight, 0])
   , xScale = d3.scale.ordinal()
     .domain(time.map(function(d, i){return i}))
-    .rangeBands([0, svgWidth])
+    .rangeBands([0, svgWidth], barPadding)
 
 
 
@@ -52,9 +52,9 @@ function tick (time){
   rects = svg.selectAll('rect')
     .data(time)
     .attr('x', function(d, i){ return xScale(i) })
-    .attr('y', 0)
+    .attr('y', function(d){ return yScale(d) })
     .attr('width',  width)
-    .attr('height', function(d){ return yScale(d) })
+    .attr('height', function(d){ return svgHeight - yScale(d) })
     .attr('fill', blue)
 }
 
