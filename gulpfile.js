@@ -21,17 +21,17 @@ gulp.task('bs-reload', function () {
 
 gulp.task('sass', function () {
   return gulp.src('scss/**/*.scss')
-    .pipe(changed('dest'))
+    .pipe(changed('public'))
     .pipe(sass().on('error', console.error.bind(console)))
     .pipe(autoprefixer('last 2 versions'))
-    .pipe(gulp.dest('dest'))
+    .pipe(gulp.dest('public'))
     .pipe(reload({stream:true}))
 })
 
 gulp.task('js', function () {
   return gulp.src('js/**/*.js')
-    .pipe(changed('dest'))
-    .pipe(gulp.dest('dest'))
+    .pipe(changed('public'))
+    .pipe(gulp.dest('public'))
     .pipe(reload({stream:true}))
 })
 
