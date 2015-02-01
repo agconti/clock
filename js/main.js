@@ -15,10 +15,10 @@ var time = getTime()
   , blue = 'hsl(221, 85%, 22%)'
   , barPadding = 0.2
   , width = (svgWidth / time.length)
-  , maximumTime = [0, 60]
+  , maximumTime = [-1, 60]
   , yScale = d3.scale.linear()
       .domain(maximumTime)
-      .range([svgHeight, 0])
+      .range([svgHeight, -1])
   , xScale = d3.scale.ordinal()
     .domain(time.map(function(d, i){return i}))
     .rangeBands([0, svgWidth], barPadding)
