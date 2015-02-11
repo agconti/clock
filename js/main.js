@@ -16,7 +16,7 @@ var time = getTime()
   , labels = ['H', 'M', 'S']
   , barPadding = 0.2
   , width = (svgWidth / time.length)
-  , maximumTime = [-1, 60]
+  , maximumTime = [-1, 1]
   , yScale = d3.scale.linear()
       .domain(maximumTime)
       .range([svgHeight, -1])
@@ -28,9 +28,9 @@ var time = getTime()
 
 function getTime () {
   var now = new Date()
-  return [ now.getHours()
-         , now.getMinutes()
-         , now.getSeconds()
+  return [ now.getHours() / 24
+         , now.getMinutes() / 60
+         , now.getSeconds() / 60 
          ]
 
 }
