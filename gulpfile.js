@@ -5,6 +5,7 @@ var gulp = require('gulp')
   , autoprefixer = require('gulp-autoprefixer')
   , sass = require('gulp-sass')
   , gutil = require('gulp-util')
+  , uglify = require('gulp-uglify')
 
 
 gulp.task('browser-sync', function () {
@@ -31,6 +32,7 @@ gulp.task('sass', function () {
 gulp.task('js', function () {
   return gulp.src('js/**/*.js')
     .pipe(changed('public'))
+    .pipe(uglify().on('error', console.error.bind(console)))
     .pipe(gulp.dest('public'))
     .pipe(reload({stream:true}))
 })
