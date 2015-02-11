@@ -23,7 +23,7 @@ gulp.task('bs-reload', function () {
 gulp.task('sass', function () {
   return gulp.src('scss/**/*.scss')
     .pipe(changed('public'))
-    .pipe(sass().on('error', console.error.bind(console)))
+    .pipe(sass({errLogToConsole: true}).on('error', console.error.bind(console)))
     .pipe(autoprefixer('last 2 versions'))
     .pipe(gulp.dest('public'))
     .pipe(reload({stream:true}))

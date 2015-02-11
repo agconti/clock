@@ -13,6 +13,7 @@ var time = getTime()
   // clock config
   , clock = '.clock'
   , blue = 'hsl(221, 85%, 22%)'
+  , labels = ['H', 'M', 'S']
   , barPadding = 0.2
   , width = (svgWidth / time.length)
   , maximumTime = [-1, 60]
@@ -42,14 +43,23 @@ var svg = d3.select(clock)
   .append('g')
   .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
-
-var rects = svg.selectAll('rect')
+var hands = svg.selectAll('g')
   .data(time).enter()
-  .append('rect')
- 
+  .append('g')
+
+hands.append('rect')
+
+hands.append("text")
+  .attr("x", function(d, i) { return xScale(i) + (xScale.rangeBand() / 2) })
+  .attr("y", 215)
+  .attr("dy", "0.75em")
+  .attr("text-anchor", 'middle')
+  .attr("fill", blue)
+  .text(function(d, i) { return labels[i] });   
+
 function tick (time){
 
-  rects = svg.selectAll('rect')
+  hands = svg.selectAll('rect')
     .data(time)
     .transition()
     .attr('x', function(d, i){ return xScale(i) })
@@ -66,6 +76,5 @@ tick(time)
 setInterval(function() {
   var time = getTime()
   tick(time)
-  console.log(time)
 }, 1000)
     
