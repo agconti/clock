@@ -28,9 +28,9 @@ var time = getTime()
 
 function getTime () {
   var now = new Date()
-  return [ now.getHours() / 24
-         , now.getMinutes() / 60
-         , now.getSeconds() / 60 
+  return [ now.getMinutes() / 60
+         , now.getSeconds() / 60
+         , now.getMilliseconds() / 1000 
          ]
 
 }
@@ -78,5 +78,5 @@ tick(time)
 setInterval(function() {
   var time = getTime()
   tick(time)
-}, 1000)
+}, 0)
     
