@@ -62,12 +62,13 @@ function tick (time){
   hands = svg.selectAll('circle')
     .data(time)
     .transition()
-    .attr('cx', function(d, i){ return xScale(i) })
-    .attr('cy', 200)
+    .attr('cx', svgWidth / 2)
+    .attr('cy', svgHeight / 2)
     .attr("r", function(d){ return yScale(d) })
     .attr('width',  xScale.rangeBand())
     .attr('height', function(d){ return svgHeight - yScale(d) })
-    .style('fill', blue)
+    .style('fill', function(d, i){ return ['red', 'yellow', 'blue'][i] })
+    .style('opacity', 0.7)
 }
 
 // The initial display.
