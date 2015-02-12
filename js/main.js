@@ -47,7 +47,7 @@ var hands = svg.selectAll('g')
   .data(time).enter()
   .append('g')
 
-hands.append('rect')
+hands.append('circle')
 
 hands.append("text")
   .attr("x", function(d, i) { return xScale(i) + (xScale.rangeBand() / 2) })
@@ -55,18 +55,20 @@ hands.append("text")
   .attr("dy", "0.75em")
   .attr("text-anchor", 'middle')
   .attr("fill", blue)
-  .text(function(d, i) { return labels[i] });   
+  .text(function(d, i) { return labels[i] })
 
 function tick (time){
 
-  hands = svg.selectAll('rect')
+  hands = svg.selectAll('circle')
     .data(time)
     .transition()
-    .attr('x', function(d, i){ return xScale(i) })
-    .attr('y', function(d){ return yScale(d) })
+    .attr('cx', svgWidth / 2)
+    .attr('cy', svgHeight / 2)
+    .attr("r", function(d){ return yScale(d) })
     .attr('width',  xScale.rangeBand())
     .attr('height', function(d){ return svgHeight - yScale(d) })
-    .style('fill', blue)
+    .style('fill', function(d, i){ return ['red', 'yellow', 'blue'][i] })
+    .style('opacity', 0.7)
 }
 
 // The initial display.
