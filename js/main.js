@@ -1,8 +1,8 @@
 var time = getTime()
   
   // svg config 
-  , svgWidth = 250
-  , svgHeight = 200
+  , svgWidth = 900
+  , svgHeight = 600
   , margin = {
       top: 20
     , right: 30
@@ -13,16 +13,18 @@ var time = getTime()
   // clock config
   , clock = '.clock'
   , blue = 'hsl(221, 85%, 22%)'
-  , labels = ['H', 'M', 'S']
-  , barPadding = 0.2
+  , labels = ['M', 'S', 'M']
   , width = (svgWidth / time.length)
   , maximumTime = [-1, 1]
-  , yScale = d3.scale.linear()
+  , radiusScale = d3.scale.linear()
       .domain(maximumTime)
-      .range([svgHeight, -1])
-  , xScale = d3.scale.ordinal()
-    .domain(time.map(function(d, i){return i}))
-    .rangeBands([0, svgWidth], barPadding)
+      .range([1, svgHeight / 2])
+  , hourScale = d3.scale.ordinal()
+    .domain(d3.range(24))
+    .rangeBands([0, svgWidth])
+  , horizonScale = d3.scale.ordinal()
+    .domain(d3.range(24))
+    .rangeBands([0, svgHeight])
 
 
 
@@ -30,9 +32,8 @@ function getTime () {
   var now = new Date()
   return [ now.getMinutes() / 60
          , now.getSeconds() / 60
-         , now.getMilliseconds() / 1000 
+         , now.getMilliseconds() / 1000
          ]
-
 }
 
 var svg = d3.select(clock)
@@ -47,28 +48,26 @@ var hands = svg.selectAll('g')
   .data(time).enter()
   .append('g')
 
+// append base cirlces, so we can update them
 hands.append('circle')
 
-hands.append("text")
-  .attr("x", function(d, i) { return xScale(i) + (xScale.rangeBand() / 2) })
-  .attr("y", 215)
-  .attr("dy", "0.75em")
-  .attr("text-anchor", 'middle')
-  .attr("fill", blue)
-  .text(function(d, i) { return labels[i] })
 
 function tick (time){
 
   hands = svg.selectAll('circle')
     .data(time)
     .transition()
-    .attr('cx', svgWidth / 2)
-    .attr('cy', svgHeight / 2)
-    .attr("r", function(d){ return yScale(d) })
-    .attr('width',  xScale.rangeBand())
-    .attr('height', function(d){ return svgHeight - yScale(d) })
+    .attr('cx', function(){ 
+      var now = new Date()
+      return hourScale(now.getHours())
+    })
+    .attr('cy', function(){
+      var now = new Date()
+      return hourScale(now.getHours())
+    })
+    .attr("r", function(d){ return radiusScale(d) })
     .style('fill', function(d, i){ return ['red', 'yellow', 'blue'][i] })
-    .style('opacity', 0.7)
+    .style('opacity', 0.45)
 }
 
 // The initial display.
@@ -78,5 +77,5 @@ tick(time)
 setInterval(function() {
   var time = getTime()
   tick(time)
-}, 0)
+}, 4)
     
