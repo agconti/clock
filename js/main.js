@@ -77,7 +77,7 @@ var hands = svg.selectAll('g')
 
 // append base cirlces, so we can update them
 hands.append('circle')
-
+     .style('fill', function(d, i){ return colorScale(i) })
 
 function tick (time){
 
