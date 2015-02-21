@@ -322,13 +322,19 @@ body {
    Base Styles
    ========================================================================== */
 .center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -webkit-transform: translate(-50%, -50%);
-      -ms-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
-  z-index: 1; }
+  height: 100vh;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center; }
 
 a {
   position: relative;
@@ -360,11 +366,12 @@ a {
             transform: scaleX(1); }
 
 footer {
-  position: fixed;
+  position: absolute;
   bottom: 0;
-  float: left;
   margin: 0 1em;
-  color: #3c6fdd; }
+  color: #3c6fdd;
+  text-align: center;
+  width: 100%; }
   footer h1 {
     font-size: 1em; }
   footer nav a {
