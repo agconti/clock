@@ -44,26 +44,31 @@ function setScales(){
   horizonScale
     .rangeBands([svgHeight, 0])
   legendScale
-    .range([legendMargin, svgWidth])
+    .range([legendMargin, svgWidth - legendMargin])
 }
 
 var svg = d3.select(clock)
   .append('svg')
   .append('g')
 
+var legend = svg.selectAll('text')
+    .data(labels).enter()
+    .append('text')
+
+function setLegend(){
+  legend = svg.selectAll('text')
+    .data(labels)
+    .attr("x", function(d, i) { return legendScale(i) })
+    .attr("y", svgHeight - legendMargin)
+    .attr("dy", "0.75em")
+    .attr("text-anchor", function(d) { return d.textAnchor })
+    .attr("fill", blue)
+    .text(function(d) { return d.value })    
+}
+
 var hands = svg.selectAll('g')
   .data(time).enter()
   .append('g')
-
-var legend = svg.selectAll('text')
-  .data(labels).enter()
-  .append('text')
-  .attr("x", function(d, i) { return legendScale(i) })
-  .attr("y", svgHeight - legendMargin)
-  .attr("dy", "0.75em")
-  .attr("text-anchor", function(d) { return d.textAnchor })
-  .attr("fill", blue)
-  .text(function(d) { return d.value })   
 
 // append base cirlces, so we can update them
 hands.append('circle')
@@ -83,7 +88,7 @@ function tick (time){
       return horizonScale(now.getHours())
     })
     .attr("r", function(d){ return radiusScale(d) })
-    .style('fill', function(d, i){ return ['yellow','blue', 'red'][i] })
+    .style('fill', function(d, i){ return ['red', 'blue', 'yellow'][i] })
     .style('opacity', 0.45)
 }
 
@@ -100,6 +105,7 @@ function setSvgDimensions(){
     svgWidth = window.innerWidth 
     svgHeight = window.innerHeight
     setScales()
+    setLegend()
     tick(getTime())
 }
 setSvgDimensions()
