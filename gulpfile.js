@@ -38,7 +38,7 @@ gulp.task('js', function () {
 })
 
 
-gulp.task('default', ['sass', 'browser-sync'], function(){
+gulp.task('default', ['js', 'sass', 'browser-sync'], function(){
   gulp.watch(['scss/*.scss'], ['sass'])
   gulp.watch(['js/**/*.js'], ['js'])
   gulp.watch('*.html', ['bs-reload'])
