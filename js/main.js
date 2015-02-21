@@ -3,30 +3,26 @@ var time = getTime()
   // svg config 
   , svgWidth = 900
   , svgHeight = 600
-  , margin = {
-      top: 20
-    , right: 30
-    , bottom: 30
-    , left: 40
-    }
 
   // clock config
   , clock = '.clock'
   , blue = 'hsl(221, 85%, 22%)'
-  , labels = ['M', 'S', 'M']
-  , width = (svgWidth / time.length)
   , maximumTime = [-1, 1]
+
   , radiusScale = d3.scale.linear()
       .domain(maximumTime)
-      .range([1, svgHeight / 2])
   , hourScale = d3.scale.ordinal()
-    .domain(d3.range(24))
-    .rangeBands([0, svgWidth])
+      .domain(d3.range(24))
   , horizonScale = d3.scale.ordinal()
-    .domain(d3.range(24))
-    .rangeBands([0, svgHeight])
+      .domain(d3.range(24))
 
-
+  // legend config
+  , labels = [ { value: 'AM', textAnchor: "start"}
+             , { value: 'PM', textAnchor: "end"}
+             ]
+  , legendMargin = 25
+  , legendScale = d3.scale.ordinal()
+      .domain(d3.range(labels.length))
 
 function getTime () {
   var now = new Date()
@@ -36,17 +32,38 @@ function getTime () {
          ]
 }
 
+
+function setScales(){
+  d3.select('svg')
+    .attr("height", svgHeight)
+    .attr("width", svgWidth)
+  radiusScale
+    .range([0, svgHeight * 0.25])
+  hourScale
+    .rangeBands([-1, svgWidth])
+  horizonScale
+    .rangeBands([svgHeight, 0])
+  legendScale
+    .range([legendMargin, svgWidth])
+}
+
 var svg = d3.select(clock)
   .append('svg')
-  .attr('height', svgHeight + margin.top + margin.bottom + 'px')
-  .attr('width', svgWidth + margin.left + margin.right + 'px')
-  .style('margin-left', -margin.left+'px')
   .append('g')
-  .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
 var hands = svg.selectAll('g')
   .data(time).enter()
   .append('g')
+
+var legend = svg.selectAll('text')
+  .data(labels).enter()
+  .append('text')
+  .attr("x", function(d, i) { return legendScale(i) })
+  .attr("y", svgHeight - legendMargin)
+  .attr("dy", "0.75em")
+  .attr("text-anchor", function(d) { return d.textAnchor })
+  .attr("fill", blue)
+  .text(function(d) { return d.value })   
 
 // append base cirlces, so we can update them
 hands.append('circle')
@@ -63,19 +80,31 @@ function tick (time){
     })
     .attr('cy', function(){
       var now = new Date()
-      return hourScale(now.getHours())
+      return horizonScale(now.getHours())
     })
     .attr("r", function(d){ return radiusScale(d) })
-    .style('fill', function(d, i){ return ['red', 'yellow', 'blue'][i] })
+    .style('fill', function(d, i){ return ['yellow','blue', 'red'][i] })
     .style('opacity', 0.45)
 }
 
-// The initial display.
-tick(time)
 
 // update the clock 
 setInterval(function() {
   var time = getTime()
   tick(time)
 }, 4)
+
+
+// The initial display.
+function setSvgDimensions(){
+    svgWidth = window.innerWidth 
+    svgHeight = window.innerHeight
+    setScales()
+    tick(getTime())
+}
+setSvgDimensions()
+
+// responsively resize 
+window.onresize = setSvgDimensions
+
     
