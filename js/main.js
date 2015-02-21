@@ -7,8 +7,13 @@ var time = getTime()
   // clock config
   , clock = '.clock'
   , blue = 'hsl(221, 85%, 22%)'
+  , peach = 'hsl(31, 100%, 50%)'
+  , orange = 'hsl(41, 100%, 50%)'
+  , yellow = 'hsl(51, 100%, 50%)'
+  , colorScale = d3.scale.ordinal()
+      .domain(d3.range(3))
+      .range([peach, orange, yellow])
   , maximumTime = [-1, 1]
-
   , radiusScale = d3.scale.linear()
       .domain(maximumTime)
   , hourScale = d3.scale.ordinal()
@@ -62,7 +67,7 @@ function setLegend(){
     .attr("y", svgHeight - legendMargin)
     .attr("dy", "0.75em")
     .attr("text-anchor", function(d) { return d.textAnchor })
-    .attr("fill", blue)
+    .style("fill", blue)
     .text(function(d) { return d.value })    
 }
 
@@ -88,8 +93,7 @@ function tick (time){
       return horizonScale(now.getHours())
     })
     .attr("r", function(d){ return radiusScale(d) })
-    .style('fill', function(d, i){ return ['red', 'blue', 'yellow'][i] })
-    .style('opacity', 0.45)
+    .style('fill', function(d, i){ return colorScale(i) })
 }
 
 
