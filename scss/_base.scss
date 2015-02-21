@@ -14,14 +14,12 @@ body{
 /* ==========================================================================
    Base Styles
    ========================================================================== */
-.center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1;
+.center{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
 a {
       position: relative;
       outline: none;

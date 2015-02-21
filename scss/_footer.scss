@@ -1,9 +1,10 @@
 footer {
-    position: fixed;
+    position: absolute;
     bottom: 0;
-    float: left;
     margin: 0 1em;
     color: hsl(221, 70%, 55%);
+    text-align: center;
+    width: 100%;
 
     h1 {
         font-size: 1em;
