@@ -1,11 +1,14 @@
+;(function(){
+
 var time = getTime()
-  
+
   // svg config 
   , svgWidth = 900
   , svgHeight = 600
 
   // clock config
   , clock = '.clock'
+  , frameRate = 500
   , blue = 'hsl(221, 85%, 22%)'
   , peach = 'hsl(31, 100%, 50%)'
   , orange = 'hsl(41, 100%, 50%)'
@@ -29,37 +32,38 @@ var time = getTime()
   , legendScale = d3.scale.ordinal()
       .domain(d3.range(labels.length))
 
+/**
+ * A factory that returns the current time.
+ * @return {object} -- an array of the form [ miliseconds%, seconds%, minuets% ]
+ */
 function getTime () {
   var now = new Date()
-  return [ now.getMinutes() / 60
+  return [ now.getMilliseconds() / 999
          , now.getSeconds() / 60
-         , now.getMilliseconds() / 1000
+         , now.getMinutes() / 60
          ]
 }
 
-
+/**
+ * Sets the clocks scales to the current svg width and height
+ */
 function setScales(){
   d3.select('svg')
     .attr("height", svgHeight)
     .attr("width", svgWidth)
   radiusScale
-    .range([0, svgHeight * 0.25])
+    .range([0, (svgHeight / 2)])
   hourScale
     .rangeBands([-1, svgWidth])
   horizonScale
-    .rangeBands([svgHeight, 0])
+    .range([svgHeight, 0, svgHeight])
   legendScale
     .range([legendMargin, svgWidth - legendMargin])
 }
 
-var svg = d3.select(clock)
-  .append('svg')
-  .append('g')
-
-var legend = svg.selectAll('text')
-    .data(labels).enter()
-    .append('text')
-
+/**
+ * Sets the clocks legened
+ */
 function setLegend(){
   legend = svg.selectAll('text')
     .data(labels)
@@ -71,19 +75,27 @@ function setLegend(){
     .text(function(d) { return d.value })    
 }
 
-var hands = svg.selectAll('g')
-  .data(time).enter()
-  .append('g')
+/**
+ * Fully redraws the clock from scratch.
+ */
+function setSvgDimensions(){
+    svgWidth = window.innerWidth 
+    svgHeight = window.innerHeight
+    setScales()
+    setLegend()
+    tick(getTime())
+}
 
-// append base cirlces, so we can update them
-hands.append('circle')
-     .style('fill', function(d, i){ return colorScale(i) })
 
+/**
+ * Updates the clock as time passes. 
+ */
 function tick (time){
 
   hands = svg.selectAll('circle')
     .data(time)
     .transition()
+    .duration(frameRate)
     .attr('cx', function(){ 
       var now = new Date()
       return hourScale(now.getHours())
@@ -96,25 +108,33 @@ function tick (time){
     .style('fill', function(d, i){ return colorScale(i) })
 }
 
+var svg = d3.select(clock)
+  .append('svg')
+  .append('g')
+
+var hands = svg.selectAll('g')
+  .data(time).enter()
+  .append('g')
+
+// append base cirlces, so we can update them
+hands.append('circle')
+     .style('fill', function(d, i){ return colorScale(i) })
+
+var legend = svg.selectAll('text')
+    .data(labels).enter()
+    .append('text')
+
+// The initial display.
+setSvgDimensions()
+
+// allow the clock resize responsively
+window.onresize = setSvgDimensions
 
 // update the clock 
 setInterval(function() {
   var time = getTime()
   tick(time)
-}, 4)
+}, frameRate)
 
-
-// The initial display.
-function setSvgDimensions(){
-    svgWidth = window.innerWidth 
-    svgHeight = window.innerHeight
-    setScales()
-    setLegend()
-    tick(getTime())
-}
-setSvgDimensions()
-
-// responsively resize 
-window.onresize = setSvgDimensions
-
+})()
     
