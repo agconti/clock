@@ -1,3 +1,4 @@
+
 var time = getTime()
   
   // svg config 
@@ -9,14 +10,14 @@ var time = getTime()
     , bottom: 30
     , left: 40
     }
+  , frameRate = 200
 
   // clock config
   , clock = '.clock'
   , blue = 'hsl(221, 85%, 22%)'
   , labels = ['H', 'M', 'S']
   , barPadding = 0.2
-  , width = (svgWidth / time.length)
-  , maximumTime = [-1, 1]
+  , maximumTime = [0, 1]
   , yScale = d3.scale.linear()
       .domain(maximumTime)
       .range([svgHeight, -1])
@@ -25,14 +26,16 @@ var time = getTime()
     .rangeBands([0, svgWidth], barPadding)
 
 
-
+/**
+ * A factory that returns the current time in a convenient array.
+ * @return {object} -- an array of the form [ hours%, minutes%, seconds% ]
+ */
 function getTime () {
   var now = new Date()
   return [ now.getHours() / 24
          , now.getMinutes() / 60
          , now.getSeconds() / 60 
          ]
-
 }
 
 var svg = d3.select(clock)
@@ -55,8 +58,12 @@ hands.append("text")
   .attr("dy", "0.75em")
   .attr("text-anchor", 'middle')
   .attr("fill", blue)
-  .text(function(d, i) { return labels[i] });   
+  .text(function(d, i) { return labels[i] })   
 
+
+/**
+ * Updates the clock as time passes. 
+ */
 function tick (time){
 
   hands = svg.selectAll('rect')
@@ -76,5 +83,5 @@ tick(time)
 setInterval(function() {
   var time = getTime()
   tick(time)
-}, 1000)
+}, frameRate)
     
