@@ -51,6 +51,7 @@ var hands = svg.selectAll('g')
   .append('g')
 
 hands.append('rect')
+  .style('fill', blue)
 
 hands.append("text")
   .attr("x", function(d, i) { return xScale(i) + (xScale.rangeBand() / 2) })
